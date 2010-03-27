@@ -13,7 +13,6 @@ _userId = '31945977@N04'
 _photoSize = 'b'
 
 api_key = '9ef09d14ab74f2c204b5c4ceea060b4a'
-# secret = 'f1f0391de2f712a7'
 flickr = flickrapi.FlickrAPI(api_key)
 
 # get his all public photos
