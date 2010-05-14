@@ -134,6 +134,9 @@ def main():
 		flog.write(photo+_photoSize+';')
 
 	peopleUsername = flickr.people_getInfo(user_id=_userId).find('person/realname').text
+	if not peopleUsername:
+	# Some times the Flickr user doesn't have a real name, so...
+		peopleUsername = _userId
 	print "--> Downloaded "+str(len(photos))+" photos of "+peopleUsername+" !"
 	flog.close()
 	# You have some awesome photos! :)
