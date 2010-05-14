@@ -34,7 +34,8 @@ __author__ = 'Abhinay Omkar <abhiomkar AT gmail DOT com>'
 
 import urllib, os, flickrapi
 
-_userFlickr = 'http://flickr.com/photos/abhiomkar'
+# Replace the below value with whatever URL of your Flickr photostream
+_userFlickr = 'http://flickr.com/photos/your_flickr_url'
 
 # 's'	small square 75x75
 # 't'	thumbnail, 100 on longest side
