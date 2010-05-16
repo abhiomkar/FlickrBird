@@ -51,11 +51,7 @@ def main():
 	flickr = flickrapi.FlickrAPI(api_key)
 	
 	# Convert Flickr URL to User NSID
-	_user = _userFlickr.strip().rstrip('/').split('/')[-1]
-	if '@N' in _user:
-		_userId = _user
-	else:
-		_userId = flickr.people_findByUsername(username=_user).find('user').attrib['id']
+	_userId = flickr.urls_lookupUser(url=_userFlickr).find('user').attrib['id']
 
 	# Get all user's public photos
 	publicPhotos = flickr.people_getPublicPhotos(api_key=api_key, user_id = _userId, per_page = 500)
@@ -70,15 +66,15 @@ def main():
 	photos = set([p+_photoSize for p in photos])-set(log)
 	photos = [p.replace(_photoSize,'') for p in photos]
 	if totalPhotos-len(photos):
-		print "Skipping "+str(totalPhotos-len(photos))+" of "+str(totalPhotos)+" photos. They are already downloaded."
+		print "Skipping %s of %s photos. They are already downloaded." % (str(totalPhotos-len(photos)), str(totalPhotos))
 	if len(photos)!=0:
-		print "--> Started downloading "+str(len(photos))+" photos"
+		print "--> Started downloading %s photos" % str(len(photos))
 	
 	print '>> You can suspend the download with ^C.'
 
 	# ok, start downloading photos one-by-one
 	for photo in photos:
-		photoTitle = flickr.photos_getInfo(photo_id=photo).find('photo/title').text
+		photoTitle = flickr.photos_getInfo(photo_id=photo).find('photo/title').text or ''
 		photoSizesTag = flickr.photos_getSizes(photo_id=photo).findall('sizes/size')
 		photoSizes_list = [size.attrib['source'] for size in photoSizesTag]
 		photoSizes = {}
@@ -120,7 +116,7 @@ def main():
 			elif photoSizes.has_key('small'):
 				photoDownload = photoSizes['small']
 				
-		print "Downloading: " + photoTitle
+		print "Downloading: %s" % photoTitle
 		# unix doesn't accept '/' in a file name, try $ touch 'foo/bar'
 		photoTitle = photoTitle.replace('/','_')
 		if photoTitle.startswith('.'):
@@ -138,7 +134,7 @@ def main():
 	if not peopleUsername:
 	# Some times the Flickr user doesn't have a real name, so...
 		peopleUsername = _userId
-	print "--> Downloaded "+str(len(photos))+" photos of "+peopleUsername+" !"
+	print "--> Downloaded %s photos of %s !" % (str(len(photos)), peopleUsername)
 	flog.close()
 	# You have some awesome photos! :)
 
